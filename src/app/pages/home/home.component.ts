@@ -3,9 +3,11 @@ import {HomeService} from '../../services/home.service';
 import {Banner, HotTag, Singer, SongSheet} from '../../services/data-type/common-types';
 import {NzCarouselComponent} from 'ng-zorro-antd';
 import {SingerService} from '../../services/singer.service';
+import {ActivatedRoute} from "@angular/router";
+import {map} from "rxjs/operators";
 
 /*
-*轮播组件
+*主页面的显示
 * 与想要的页面有一定差别，进行一次二次封装
 * */
 @Component({
@@ -27,52 +29,66 @@ export class HomeComponent implements OnInit {
   *注入服务  调用方法  获取数据
   * */
   constructor(
-    private homeService: HomeService,
-    private singerService: SingerService) {
-    this.getBanners();
-    this.getHotTags();
-    this.getPersonalSheetList();
-    this.getEnterSingers();
-  }
-
-  /*
-  *获取轮播数据
-  * */
-  private getBanners() {
-    this.homeService.getBanners().subscribe(banners => {
+    // private homeService: HomeService,
+    // private singerService: SingerService,  //没有用处了，现在将获取数据的工作全部交给了homeresolve去进行
+    private route: ActivatedRoute
+  ) {
+    this.route.data.pipe(map(res => res.homeDatas)).subscribe(([banners, hotTags, songSheetList, singers]) => {
       this.banners = banners;
-    });
+      this.hotTags = hotTags;
+      this.songSheetList = songSheetList;
+      this.singers = singers;
+    });   // route.data返回的是路由配置中的一些数据但是这里使用管道使他只返回 resolve: { homeDatas: HomeResolveService}  中的homeDatas对象
+          // 对象被观察然后调用subscribe方法返回其中被实现的resolve方法的数据
+
+    // this.getBanners();
+    // this.getHotTags();
+    // this.getPersonalSheetList();
+    // this.getEnterSingers();
   }
 
-  /*
-  * 获取热播标签
-  * */
-  private getHotTags() {
-    this.homeService.getHotTags().subscribe(tags => {
-      // console.log(tags);
-      this.hotTags = tags;
-    });
-  }
 
   /*
-  * 获取推荐播单
+  * 没有用处了，现在将获取数据的工作全部交给了homeresolve去进行
   * */
-  private getPersonalSheetList() {
-    this.homeService.getPersonalSheetList().subscribe(sheets => {
-      // console.log(sheets);
-      this.songSheetList = sheets;
-    });
-  }
-
-  /*
-  * 获取入驻歌手
-  * */
-  private getEnterSingers() {
-    this.singerService.getEnterSinger().subscribe(singer => {
-      // console.log(singer);
-      this.singers = singer;
-    });
-  }
+  // /*
+  // *获取轮播数据
+  // * */
+  // private getBanners() {
+  //   this.homeService.getBanners().subscribe(banners => {
+  //     this.banners = banners;
+  //   });
+  // }
+  //
+  // /*
+  // * 获取热播标签
+  // * */
+  // private getHotTags() {
+  //   this.homeService.getHotTags().subscribe(tags => {
+  //     // console.log(tags);
+  //     this.hotTags = tags;
+  //   });
+  // }
+  //
+  // /*
+  // * 获取推荐播单
+  // * */
+  // private getPersonalSheetList() {
+  //   this.homeService.getPersonalSheetList().subscribe(sheets => {
+  //     // console.log(sheets);
+  //     this.songSheetList = sheets;
+  //   });
+  // }
+  //
+  // /*
+  // * 获取入驻歌手
+  // * */
+  // private getEnterSingers() {
+  //   this.singerService.getEnterSinger().subscribe(singer => {
+  //     // console.log(singer);
+  //     this.singers = singer;
+  //   });
+  // }
 
   ngOnInit() {
   }
