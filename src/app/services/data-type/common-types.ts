@@ -20,12 +20,12 @@ export type Singer = {
   albumSize: number;
 };
 // 歌曲
-  export type Song = {
+export type Song = {
   id: number;
   name: string;
   url: string;
   ar: Singer[];
-  al: { id:number; name: string; picUrl: string};
+  al: { id: number; name: string; picUrl: string};
   dt: number;
   };
 
